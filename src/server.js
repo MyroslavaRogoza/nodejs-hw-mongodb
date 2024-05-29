@@ -25,21 +25,24 @@ export function setupServer() {
     });
   });
 
-  app.get('/contacts/:contactId', async (req, res) => { const { contactId } = req.params;
-  const contact = await getContactById(contactId);
+  app.get('/contacts/:contactId', async (req, res) => {
+    const { contactId } = req.params;
+    const contact = await getContactById(contactId);
 
-  res.status(200).json({
-   message: `Successfully found contact with id ${contactId}!`,
-    data: contact,
-  });});
+    res.status(200).json({
+      message: `Successfully found contact with id ${contactId}!`,
+      data: contact,
+    });
 
-  app.use('*', (req, res, next) => {
+  });
+
+  app.use('*', (req, res) => {
     res.status(404).json({
       message: 'Not found',
     });
   });
 
-  app.use((err, req, res, next) => {
+  app.use('*', (err, req, res) => {
     res.status(500).json({
       message: 'Something went wrong',
       error: err.message,
