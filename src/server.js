@@ -29,17 +29,21 @@ export function setupServer() {
 
   app.get('/contacts/:contactId', async (req, res) => {
     const { contactId } = req.params;
-    const contact = await getContactById(contactId);
-
-    res.status(200).json({
-      message: `Successfully found contact with id ${contactId}!`,
-      data: contact,
-    });
     if (!mongoose.Types.ObjectId.isValid(contactId)) {
       res.status(404).json({
         message: 'not found',
       });
     }
+    const contact = await getContactById(contactId);
+    if (!contact) {
+      res.status(404).json({
+        message: 'there is no contact with this id',
+      });
+    }
+    res.status(200).json({
+      message: `Successfully found contact with id ${contactId}!`,
+      data: contact,
+    });
   });
 
   app.use('*', (req, res) => {
