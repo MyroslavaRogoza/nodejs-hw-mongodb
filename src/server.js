@@ -33,6 +33,7 @@ export function setupServer() {
       res.status(404).json({
         message: 'not found',
       });
+      return;
     }
     const contact = await getContactById(contactId);
     if (!contact) {
