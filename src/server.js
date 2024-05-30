@@ -3,6 +3,7 @@ import cors from 'cors';
 import pino from 'pino-http';
 import { env } from './utils/env.js';
 import { getAllContacts, getContactById } from './services/contacts.js';
+import mongoose from 'mongoose';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -34,7 +35,11 @@ export function setupServer() {
       message: `Successfully found contact with id ${contactId}!`,
       data: contact,
     });
-
+    if (!mongoose.Types.ObjectId.isValid(contactId)) {
+      res.status(404).json({
+        message: 'not found',
+      });
+    }
   });
 
   app.use('*', (req, res) => {
