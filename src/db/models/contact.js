@@ -28,8 +28,7 @@ const Contact = new Schema(
   {
     createdAt: true,
     updatedAt: true,
-    timestamps: true
-
+    timestamps: true,
   },
 );
 export const ContactsCollection = model('contacts', Contact);

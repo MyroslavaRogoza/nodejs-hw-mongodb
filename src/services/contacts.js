@@ -10,3 +10,7 @@ export const getContactById = async (contactId) => {
   return contact;
 };
 
+export const createStudent = async (payload) => {
+  const contact = await ContactsCollection.create(payload);
+  return contact;
+};
