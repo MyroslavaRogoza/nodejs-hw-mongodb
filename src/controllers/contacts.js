@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {
   createContact,
+  deleteContact,
   getAllContacts,
   getContactById,
   updateContact,
@@ -64,17 +65,17 @@ export const patchContactController = async (req, res, next) => {
     data: updatedContact.value,
   });
 };
-/*
-export const deleteContactController =  async (req, res, next) => {
+
+export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
-const deletedContact = await deleteContact(contactId);
+  const deletedContact = await deleteContact(contactId);
 
-if(!deletedContact){
-  next(createHttpError(404, 'Contact not found'));
-  return;
-}
+  if (!deletedContact) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
+  }
 
-res.json({
-  status: 204
-});
-};*/
+  res.json({
+    status: 204,
+  });
+};
