@@ -1,3 +1,4 @@
+import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 import {
   createContact,
@@ -6,7 +7,6 @@ import {
   getContactById,
   updateContact,
 } from '../services/contacts.js';
-import createHttpError from 'http-errors';
 
 export const getAllContactsController = async (req, res) => {
   const contacts = await getAllContacts();
@@ -54,14 +54,14 @@ export const patchContactController = async (req, res, next) => {
 
   const updatedContact = await updateContact(contactId, req.body);
 
-  if (!updatedContact) {
+  if (!updatedContact.value) {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
 
   res.json({
     status: 200,
-    message: `Successfully patched a student!`,
+    message: `Successfully patched a contact!`,
     data: updatedContact.value,
   });
 };
