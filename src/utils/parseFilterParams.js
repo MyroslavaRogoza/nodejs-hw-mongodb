@@ -6,8 +6,14 @@ const parseType = (type) => {
 };
 
 const parseToBool = (query) => {
-  if (typeof query === 'string') {
-    return Boolean(query);
+  const isString = typeof query === 'string';
+  if (!isString) return;
+
+  if (query === 'true') {
+    return true;
+  }
+  if (query === 'false') {
+    return false;
   }
 };
 
@@ -19,6 +25,6 @@ export const parseFilterParams = (query) => {
 
   return {
     type: parsedType,
-    IsFavorite: parsedIsFavourite,
+    isFavourite: parsedIsFavourite,
   };
 };
