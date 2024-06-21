@@ -1,5 +1,10 @@
 import { ONE_MONTH } from '../constants/index.js';
-import { loginUser, refreshSession, registerUser } from '../services/auth.js';
+import {
+  loginUser,
+  logoutUser,
+  refreshSession,
+  registerUser,
+} from '../services/auth.js';
 
 export const registerController = async (req, res) => {
   const user = await registerUser(req.body);
@@ -50,4 +55,17 @@ export const refreshSessionController = async (req, res) => {
     message: 'Successfully refreshed a session!',
     data: { accessToken: session.accessToken },
   });
+};
+
+export const logoutSessionController = async (req, res) => {
+  const { sessionId, refreshToken } = req.cookies;
+
+  if (sessionId && refreshToken) {
+    await logoutUser(sessionId, refreshToken);
+  }
+
+  res.clearCookie('sessionId');
+  res.clearCookie('refreshToken');
+
+  res.status(204).send();
 };
