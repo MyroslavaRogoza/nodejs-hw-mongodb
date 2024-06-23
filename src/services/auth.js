@@ -51,20 +51,18 @@ export const loginUser = async (payload) => {
 const createNewSession = () => {
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
-  const createdSession = {
+  return {
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + ONE_MONTH),
   };
-
-  return createdSession;
 };
 
-export const refreshSession = async ({ sessionId, refreshToken }) => {
+export const refreshSession = async ({ sessionId, sessionToken }) => {
   const session = await Session.findOne({
     _id: sessionId,
-    refreshToken,
+    sessionToken,
   });
 
   if (!session) {
@@ -80,16 +78,14 @@ export const refreshSession = async ({ sessionId, refreshToken }) => {
 
   const newSession = createNewSession();
 
-  await Session.deleteOne({ _id: session._id });
+  await Session.deleteOne({ _id: sessionId });
 
-  const refreshedSession = await Session.create({
+  return await Session.create({
+    userId: session.userId,
     ...newSession,
-    _id: session._id,
   });
-  return refreshedSession;
 };
 
-export const logoutUser = async ( sessionId, refreshToken) => {
-
+export const logoutUser = async (sessionId, refreshToken) => {
   await Session.deleteOne({ _id: sessionId, refreshToken: refreshToken });
 };
