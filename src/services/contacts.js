@@ -48,9 +48,10 @@ export const getContactById = async (contactId, userId) => {
   return contact;
 };
 
-export const createContact = async (payload, userId) => {
+export const createContact = async ({ photo, ...payload }, userId) => {
   const contact = await ContactsCollection.create({
     ...payload,
+    photo: photo,
     userId: userId,
   });
   return contact;
@@ -58,20 +59,18 @@ export const createContact = async (payload, userId) => {
 
 export const updateContact = async (
   contactId,
-  { photo, ...payload },
+  { photoUrl, ...payload },
   userId,
   options = {},
 ) => {
-  const url = saveFileToCloudinary(photo);
-  const updatedContact = await ContactsCollection.findOneAndUpdate(
-    { _id: contactId, userId: userId },
-    { ...payload, photo: url },
+  const updatedContact = await ContactsCollection.findByIdAndUpdate(
+    contactId,
+    { ...payload, photo: photoUrl },
     {
       new: true,
       includeResultMetadata: true,
       ...options,
     },
-
   );
   return updatedContact;
 };
@@ -83,3 +82,4 @@ export const deleteContact = async (contactId, userId) => {
   });
   return deletedContact;
 };
+//{ _id: contactId, userId: userId },

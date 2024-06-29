@@ -12,6 +12,7 @@ import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { ObjectId } from 'mongodb';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveToCloudinary.js.js';
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
@@ -55,9 +56,17 @@ export const getContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
-  const contact = await createContact(req.body, req.user._id);
-  const photo = req.file;
+  const photoUrl = req.file;
 
+  let url;
+  if (photoUrl) {
+    url = await saveFileToCloudinary(photoUrl);
+  }
+
+  const contact = await createContact(
+    { ...req.body, photo: url },
+    req.user._id,
+  );
   res.status(201).json({
     status: 201,
     message: `Successfully created a contact!`,
@@ -66,22 +75,21 @@ export const createContactController = async (req, res) => {
 };
 
 export const patchContactController = async (req, res, next) => {
-  const { body } = req;
   const { contactId } = req.params;
   const userId = req.user._id;
   const photo = req.file;
-  let photoUrl;
+  let url;
   if (photo) {
-    photoUrl = await saveFileToUploadDir(photo);
+    url = await saveFileToCloudinary(photo);
   }
 
   const updatedContact = await updateContact(
     contactId,
-    { ...body, photo: photoUrl },
+    { ...req.body, photoUrl: url },
     userId,
   );
 
-  if (!updatedContact) {
+  if (!updatedContact.value) {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
@@ -89,7 +97,7 @@ export const patchContactController = async (req, res, next) => {
   res.json({
     status: 200,
     message: `Successfully patched a contact!`,
-    data: updatedContact,
+    data: updatedContact.value,
   });
 };
 
