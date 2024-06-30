@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-
+import { saveFileToCloudinary } from '../utils/saveToCloudinary.js';
 import {
   createContact,
   deleteContact,
@@ -11,12 +11,12 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { ObjectId } from 'mongodb';
-import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
-import { saveFileToCloudinary } from '../utils/saveToCloudinary.js.js';
+
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
+
   const contacts = await getAllContacts({
     page,
     perPage,
@@ -29,6 +29,25 @@ export const getAllContactsController = async (req, res) => {
   res.status(200).json({
     message: 'Successfully found all contacts!',
     data: contacts,
+  });
+};
+
+export const createContactController = async (req, res) => {
+  const photo = req.file;
+
+  let url;
+  if (photo) {
+    url = await saveFileToCloudinary(photo);
+  }
+  const contact = await createContact(
+    { ...req.body, photoUrl: url },
+    req.user._id,
+  );
+
+  res.status(201).json({
+    status: 201,
+    message: `Successfully created a contact!`,
+    data: contact,
   });
 };
 
@@ -55,29 +74,11 @@ export const getContactByIdController = async (req, res, next) => {
   });
 };
 
-export const createContactController = async (req, res) => {
-  const photoUrl = req.file;
-
-  let url;
-  if (photoUrl) {
-    url = await saveFileToCloudinary(photoUrl);
-  }
-
-  const contact = await createContact(
-    { ...req.body, photo: url },
-    req.user._id,
-  );
-  res.status(201).json({
-    status: 201,
-    message: `Successfully created a contact!`,
-    data: contact,
-  });
-};
-
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const userId = req.user._id;
   const photo = req.file;
+
   let url;
   if (photo) {
     url = await saveFileToCloudinary(photo);

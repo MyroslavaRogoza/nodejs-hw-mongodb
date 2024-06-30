@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+
 import {
   createContactController,
   deleteContactController,
@@ -14,21 +15,20 @@ import {
 } from '../validation/students.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { upload } from '../middlewares/multer.js';
-
 const router = Router();
 
 router.use(authenticate);
 
+router.post(
+  '/',
+  upload.single('photo'),
+  validateBody(createContactSchema),
+  ctrlWrapper(createContactController),
+);
+
 router.get('/', ctrlWrapper(getAllContactsController));
 
 router.get('/:contactId', ctrlWrapper(getContactByIdController));
-
-router.post(
-  '/',
-  validateBody(createContactSchema),
-  upload.single('photo'),
-  ctrlWrapper(createContactController),
-);
 
 router.patch(
   '/:contactId',

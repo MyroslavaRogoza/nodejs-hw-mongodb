@@ -1,7 +1,6 @@
-import cloudinary from 'cloudinary';
-
 import { env } from './env.js';
 import { CLOUDINARY } from '../constants/index.js';
+import cloudinary from 'cloudinary';
 
 cloudinary.v2.config({
   secure: true,
