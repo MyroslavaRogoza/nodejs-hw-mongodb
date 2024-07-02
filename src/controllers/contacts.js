@@ -11,7 +11,6 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { ObjectId } from 'mongodb';
-import { clearTempFolder } from '../utils/clearTempFolder.js';
 
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -44,8 +43,6 @@ export const createContactController = async (req, res) => {
     { ...req.body, photoUrl: url },
     req.user._id,
   );
-
-  clearTempFolder();
 
   res.status(201).json({
     status: 201,
@@ -97,8 +94,6 @@ export const patchContactController = async (req, res, next) => {
     next(createHttpError(404, 'Contact not found'));
     return;
   }
-
-  clearTempFolder();
 
   res.json({
     status: 200,
