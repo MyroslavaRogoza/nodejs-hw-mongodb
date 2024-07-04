@@ -47,9 +47,10 @@ export const getContactById = async (contactId, userId) => {
   return contact;
 };
 
-export const createContact = async (payload, userId) => {
+export const createContact = async ({ photoUrl, ...payload }, userId) => {
   const contact = await ContactsCollection.create({
     ...payload,
+    photo: photoUrl,
     userId: userId,
   });
   return contact;
@@ -57,13 +58,13 @@ export const createContact = async (payload, userId) => {
 
 export const updateContact = async (
   contactId,
-  payload,
+  { photoUrl, ...payload },
   userId,
   options = {},
 ) => {
   const updatedContact = await ContactsCollection.findOneAndUpdate(
     { _id: contactId, userId: userId },
-    { $set: payload },
+    { ...payload, photo: photoUrl },
     {
       new: true,
       includeResultMetadata: true,
@@ -80,3 +81,4 @@ export const deleteContact = async (contactId, userId) => {
   });
   return deletedContact;
 };
+
