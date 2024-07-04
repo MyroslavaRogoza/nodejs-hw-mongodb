@@ -24,12 +24,14 @@ const Contact = new Schema(
       required: true,
       default: 'personal',
     },
+    userId: { type: Schema.Types.ObjectId, ref: 'users' },
+    photo: { type: String, required: false },
   },
   {
     createdAt: true,
     updatedAt: true,
-    timestamps: true
-
+    timestamps: true,
+    versionKey: false,
   },
 );
 export const ContactsCollection = model('contacts', Contact);
