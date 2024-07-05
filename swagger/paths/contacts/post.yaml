@@ -28,7 +28,7 @@ requestBody:
             description: "Contact's email"
             type: string
             example: "example@gmail.com"
-          isFavourite:
+        isFavourite:
             description: "Contact's favourite status"
             type: boolean
             example: true

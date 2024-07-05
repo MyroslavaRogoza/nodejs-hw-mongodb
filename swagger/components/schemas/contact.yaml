@@ -4,7 +4,6 @@ required:
   - name
   - phoneNumber
   - contactType
-  - userId
 properties:
   _id:
     description: "Contact's id"
@@ -14,22 +13,22 @@ properties:
     description: "Contact's name"
     type: string
     example: 'Bob Doe'
- phoneNumber:
+  phoneNumber:
     description: "Contact's phone number"
     type: string
     example: "+380123456789"
- email:
+  email:
     description: "Contact's email"
     type: string
-   example: "example@gmail.com"
+    example: "example@gmail.com"
   isFavourite:
     description: "Contact's favourite status"
     type: boolean
     example: true
-   contactType:
+  contactType:
       description: "Contact type"
       type: string
-      enum: ['work', 'home', 'personal'],
+      enum: ['work', 'home', 'personal']
   userId:
     description: "Contact's user id"
     type: string
