@@ -1,4 +1,3 @@
-
 tags:
   - Contacts
 summary: Create a contact
@@ -21,11 +20,11 @@ requestBody:
             description: "Contact's name"
             type: string
             example: 'Bob Doe'
-         phoneNumber:
+        phoneNumber:
             description: "Contact's phone number"
             type: string
             example: "+380123456789"
-         email:
+        email:
             description: "Contact's email"
             type: string
             example: "example@gmail.com"
