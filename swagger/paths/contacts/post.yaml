@@ -14,36 +14,31 @@ requestBody:
           - name
           - phoneNumber
           - contactType
-          - userId
         properties:
           name:
             description: "Contact's name"
             type: string
             example: 'Bob Doe'
-        phoneNumber:
+          phoneNumber:
             description: "Contact's phone number"
             type: string
             example: "+380123456789"
-        email:
+          email:
             description: "Contact's email"
             type: string
             example: "example@gmail.com"
-        isFavourite:
+          isFavourite:
             description: "Contact's favourite status"
             type: boolean
             example: true
           contactType:
-      description: "Contact type"
-      type: string
-      enum: ['work', 'home', 'personal'],
-  userId:
-    description: "Contact's user id"
-    type: string
-    example: 65e4decdd286b30065d54af9
-  photo:
-    description: "Link to contact's photo"
-    type: string
-    example: <https://res.cloudinary.com/uqwgdu/image/upload/image.png>
+            description: "Contact type"
+            type: string
+            enum: ['work', 'home', 'personal']
+          photo:
+            description: "Contact's photo"
+            type: string
+            format: binary
 responses:
   '201':
     description: Creates a contact
@@ -58,12 +53,12 @@ responses:
           properties:
             status:
               type: integer
-              example: 200
+              example: 201
             message:
               type: string
               example: Successfully created a contact!
             data:
               type: object
               $ref: '../../components/schemas/contact.yaml'
-  '401':
-    $ref: '../../components/responses/401.yaml'
+  '404':
+    $ref: '../../components/responses/404.yaml'
